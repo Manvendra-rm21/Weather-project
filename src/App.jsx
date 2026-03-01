@@ -13,7 +13,7 @@ function App() {
       setLoading(true);
       setError("");
 
-      const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=295415789f1cc2f1e1c0f875b55f2d63&units=metric`);
+      const response = await axios.get("API");
 
       setWeather(response.data);
     } catch (err) {
