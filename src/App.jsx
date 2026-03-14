@@ -13,7 +13,7 @@ function App() {
       setLoading(true);
       setError("");
 
-      const response = await axios.get("API");
+      const response = await axios.get(`API`);
 
       setWeather(response.data);
     } catch (err) {
@@ -40,22 +40,37 @@ function App() {
 
   /* ---------------- DYNAMIC BACKGROUND ---------------- */
 
-  let backgroundStyle =
-    "bg-gradient-to-br from-blue-900 via-black to-gray-900";
+const currentTime = weather?.dt;
+console.log(currentTime);
 
-  if (weatherCondition === "Clear") {
+const sunrise = weather?.sys?.sunrise;
+const sunset = weather?.sys?.sunset;
+
+const isDay = currentTime >= sunrise && currentTime < sunset;
+
+let backgroundStyle =
+  "bg-gradient-to-br from-blue-900 via-black to-gray-900"; // default night
+
+if (weatherCondition === "Clear") {
+  if (isDay) {
+    // ☀️ Sunny Day
     backgroundStyle =
-  "bg-gradient-to-br from-sky-300 via-amber-200 to-orange-300";
-  } else if (weatherCondition === "Rain") {
+      "bg-gradient-to-br from-sky-300 via-amber-200 to-orange-300";
+  } else {
+    // 🌙 Clear Night
     backgroundStyle =
-      "bg-gradient-to-br from-gray-600 via-blue-800 to-gray-900";
-  } else if (weatherCondition === "Clouds") {
-    backgroundStyle =
-      "bg-gradient-to-br from-gray-400 via-gray-600 to-gray-800";
-  } else if (weatherCondition === "Thunderstorm") {
-    backgroundStyle =
-      "bg-gradient-to-br from-gray-800 via-gray-900 to-black";
+      "bg-gradient-to-br from-indigo-900 via-black to-gray-800";
   }
+} else if (weatherCondition === "Rain") {
+  backgroundStyle =
+    "bg-gradient-to-br from-gray-600 via-blue-800 to-gray-900";
+} else if (weatherCondition === "Clouds") {
+  backgroundStyle =
+    "bg-gradient-to-br from-gray-400 via-gray-600 to-gray-800";
+} else if (weatherCondition === "Thunderstorm") {
+  backgroundStyle =
+    "bg-gradient-to-br from-gray-800 via-gray-900 to-black";
+}
 
   /* ---------------- WEATHER ICON ---------------- */
 
@@ -78,9 +93,9 @@ function App() {
   className={`relative min-h-screen flex items-center justify-center ${backgroundStyle} text-white px-4 transition-all duration-700`}
 >
 
-  {weatherCondition === "Clear" && (
+  {/* {weatherCondition === "Clear" && (
   <div className="absolute top-10 right-10 w-72 h-72 bg-yellow-300 rounded-full blur-3xl opacity-60"></div>
-)}
+)} */}
       <div className="backdrop-blur-lg bg-white/10 shadow-2xl rounded-2xl p-8 w-full max-w-md border border-white/20">
         <h1 className="text-3xl font-bold text-center mb-6">
           🌤 Weather App
@@ -149,7 +164,7 @@ function App() {
                 🌅 Sunrise:{" "}
                 {new Date(
                   weather.sys.sunrise * 1000
-                ).toLocaleTimeString()}
+                ).toLocaleDateString()}
               </p>
               <p>
                 🌇 Sunset:{" "}
